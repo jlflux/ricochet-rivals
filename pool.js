@@ -134,7 +134,8 @@ function onPocket(b,pocket){
 function fireShot(side,angle,power){
  if(!["aim","ai"].includes(phase)||gameFinished||turn!==side||!ball(0).alive)return;
  const cue=ball(0);
- const speed=(105+clamp(power,.07,1)*1130)/120;
+ // A break needs more energy than an ordinary positional shot to spread the rack.
+ const speed=(105+clamp(power,.07,1)*1130)/120*(breakShot?1.52:1);
  cue.vx=Math.cos(angle)*speed;cue.vy=Math.sin(angle)*speed;
  shot={side,breaker:breakShot,groupsBefore:[...groups],eligibleEight:!!groups[side]&&remaining(groups[side])===0,firstHit:null,pocketed:[],scratched:false,railAfter:false,railBalls:new Set(),call:calledPocket};
  phase="moving";aim=null;callMode=false;roundAge=0;simAccumulator=0;shotsMade++;
