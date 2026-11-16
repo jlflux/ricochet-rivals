@@ -1,53 +1,64 @@
-# Ricochet Rivals
+# Ricochet Rivals — Arena Battler v0.2
 
-A playable browser prototype of a turn-based, skill-based physics arena game.
+A **playable tactical physics combat prototype**. This is the redesigned game, not the original zone-scoring puzzle/pool game.
 
-## Play
+Your crew and the AI each bring **three distinct heroes**. Every round, you plan one shot, the AI plans one, and **both launch simultaneously**. Knockouts come from collision damage, not pocketing discs or getting the last turn inside a scoring zone.
 
-Open \`index.html\` in a browser, or deploy the repository directly to Vercel as a static site.
+## Play in your browser
 
-- **Your team**: 3 blue discs (left side)
-- **Opponent**: 3 red discs (AI, right side)
-- **Shoot**: click/touch a blue disc, **drag backward** to aim and set power, release to launch
-- **Turns**: you shoot once, then the AI shoots once
-- **Score**: at the end of both shots, the team with more active discs in the golden center zone scores 1 point (ties score 0)
-- **Win**: reach 5 points or eliminate the entire enemy crew by knocking their discs into corner pockets
+- **Vercel:** Import this GitHub repo as a new project. Use the **Other** framework preset, no build command, no output directory, and the repository root as the project root. Deploy.
+- **Locally:** Open \`index.html\` in a browser, or serve the directory with \`python3 -m http.server 8080\` and visit \`http://localhost:8080\`.
+- **Previous prototype:** Visit \`/classic.html\` to play the original zone-control/pool variant. It remains unchanged.
 
-The AI has Casual, Standard, and Expert difficulty settings. Profile XP, wins, rating, and cosmetic unlocks are stored in this browser's localStorage.
+No packages, build steps, API keys, or database are needed.
 
-## Deploy to Vercel
+## How the new game works
 
-1. In Vercel, click **Add New → Project**.
-2. Import **jlflux/ricochet-rivals**.
-3. Select **Other** framework preset (no build command).
-4. Set the root directory to the repository root, leave output directory blank, and click **Deploy**.
+1. **Pick a blue hero** (click/tap its disc or roster card).
+2. Optionally select its **special ability** if the cooldown is ready.
+3. **Pull backward from that disc** to aim and set shot power; release.
+4. The AI simultaneously launches a disc it has chosen. Physics resolve both shots in the same time window.
+5. Hitting an enemy with enough speed deals damage; damage increases with impact speed. Friendly disc collisions don't deal damage.
+6. **The center rune gives 1 point of damage absorption** to every hero that stops on it after the volley; it never awards match points.
+7. Knock out all three enemies to win. If both crews survive **12 rounds**, the higher *combined remaining HP* wins. Ties are possible.
 
-The application is plain HTML/CSS/JavaScript and does not require npm, an API, a database, secrets, or a build process.
+There are **no corner pocket eliminations** in the battler. Walls and pillars are used for positioning and bank shots.
 
-## MVP scope
+### Heroes
 
-Included:
-- Fully playable drag-to-shoot physics with disc collisions and wall banks
-- Turn-based AI battles
-- Zone scoring, corner pocket elimination, victory/loss screens
-- Three AI difficulties
-- Persistent local profile XP, wins, losses, rating tiers, cosmetic disc skins
-- Desktop and touch controls, responsive layout
+| Hero | HP | Strength | Special |
+|---|---:|---|---|
+| Vanguard | 10 | High mass, hard to dislodge | **Crushing Blow:** +2 impact damage, cooldown 3 rounds |
+| Striker | 7 | Fast and mobile | **Overdrive:** 35% faster launch and +1 impact damage, cooldown 2 rounds |
+| Trickster | 8 | Agile, precise bank-shot attacker | **Bankbreaker:** +2 impact damage after hitting a wall/pillar first, cooldown 2 rounds |
 
-Not included yet:
-- Real accounts / cloud saves
-- Online multiplayer / asynchronous matchmaking
-- Global or friends leaderboards
-- Dedicated hero abilities, class mechanics, paid cosmetics, real ranked matchmaking
+Each character shoots normally when a special ability isn't selected. AI difficulty can be changed at any time.
 
-**Important:** Local rating is an illustrative offline progression score, not a genuine online leaderboard or competitive MMR system. Saves are per browser/device and can be cleared by browser storage reset.
+### Basic tactics
 
-## Next experiments
+- Use the **Vanguard** to knock enemies out of favorable positions and punish collisions.
+- Use **Striker's Overdrive** when you have a clear approach.
+- Use **Trickster** to go around pillars and trigger a banked hit.
+- Send heroes toward the **center rune** to gain a one-point guard against their next hit.
+- You can take as long as you like to aim; the game has no reaction-time challenge.
 
-The top priority is determining whether a short match feels strategically satisfying. Tune physics friction, shot power, zone-control scoring, and AI difficulty before adding backend systems or a cosmetic marketplace.
+## Persistent profile
 
-## Technology
+Wins, matches, XP, and longest win streak are stored in **localStorage** on the device/browser you're using. This is a local test profile, **not** an online account. It won't sync between devices.
 
-No dependencies. HTML5 Canvas, JavaScript, CSS. Runs on Vercel's static hosting.
+### What is not built
 
-MIT-style prototype license has **not** been chosen; repository usage rights remain with the owner.
+This prototype does **not** have online multiplayer, matchmaking, global leaderboards, permanent hero upgrades, equipment, lootboxes/gacha, purchases, cloud progression, or an MMO backend. Those systems should only be added after testing whether the battles are enjoyable.
+
+## Project files
+
+- \`index.html\` — redesigned battler interface
+- \`styles.css\` — responsive arena, roster, and controls
+- \`game.js\` — physics, character abilities, AI decisions, turn resolution, profile save
+- \`classic.html\` — preserved original pool-style prototype
+
+## Test targets
+
+Try **Casual**, **Standard**, and **Expert** difficulty. Evaluate whether collision damage is understandable, the hero roles feel distinct, simultaneous shot planning is fun, and matches last a satisfying number of rounds. The numbers are tuning candidates, not final balance.
+
+This is an experimental game; no live human multiplayer or server-side result verification is implemented.
