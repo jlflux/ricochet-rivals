@@ -1,64 +1,61 @@
-# Ricochet Rivals — Arena Battler v0.2
+# Ricochet Rivals + The 8-Ball Club
 
-A **playable tactical physics combat prototype**. This is the redesigned game, not the original zone-scoring puzzle/pool game.
+Two playable, dependency-free browser games under one GitHub repository.
 
-Your crew and the AI each bring **three distinct heroes**. Every round, you plan one shot, the AI plans one, and **both launch simultaneously**. Knockouts come from collision damage, not pocketing discs or getting the last turn inside a scoring zone.
+## Choose a game
 
-## Play in your browser
+| URL path | Game | Status |
+|---|---|---|
+| \`/\` or \`/index.html\` | **Ricochet Rivals Arena Battler** | Prototype v0.2: simultaneous 3v3 character-based physics battles |
+| \`/classic.html\` | **The 8-Ball Club** | Prototype v1.0: real 8-ball pool rack vs computer |
+| \`/zone-classic.html\` | **Original Zone Control** | Archived first prototype, preserved unchanged |
 
-- **Vercel:** Import this GitHub repo as a new project. Use the **Other** framework preset, no build command, no output directory, and the repository root as the project root. Deploy.
-- **Locally:** Open \`index.html\` in a browser, or serve the directory with \`python3 -m http.server 8080\` and visit \`http://localhost:8080\`.
-- **Previous prototype:** Visit \`/classic.html\` to play the original zone-control/pool variant. It remains unchanged.
+The arena battler is preserved. **The former \`classic.html\` route is now the actual 8-ball pool game**, with the original zone-control game moved to \`zone-classic.html\`.
 
-No packages, build steps, API keys, or database are needed.
+## Deploy on Vercel
 
-## How the new game works
+Connect \`jlflux/ricochet-rivals\` to Vercel. Framework **Other**, root directory **repository root**, **no build command**, **no output directory**, and click Deploy. Every game is a static HTML page; there are no npm packages, database credentials, or server APIs.
 
-1. **Pick a blue hero** (click/tap its disc or roster card).
-2. Optionally select its **special ability** if the cooldown is ready.
-3. **Pull backward from that disc** to aim and set shot power; release.
-4. The AI simultaneously launches a disc it has chosen. Physics resolve both shots in the same time window.
-5. Hitting an enemy with enough speed deals damage; damage increases with impact speed. Friendly disc collisions don't deal damage.
-6. **The center rune gives 1 point of damage absorption** to every hero that stops on it after the volley; it never awards match points.
-7. Knock out all three enemies to win. If both crews survive **12 rounds**, the higher *combined remaining HP* wins. Ties are possible.
+You can also open any HTML page locally in your browser.
 
-There are **no corner pocket eliminations** in the battler. Walls and pillars are used for positioning and bank shots.
+---
 
-### Heroes
+## The 8-Ball Club — gameplay
 
-| Hero | HP | Strength | Special |
-|---|---:|---|---|
-| Vanguard | 10 | High mass, hard to dislodge | **Crushing Blow:** +2 impact damage, cooldown 3 rounds |
-| Striker | 7 | Fast and mobile | **Overdrive:** 35% faster launch and +1 impact damage, cooldown 2 rounds |
-| Trickster | 8 | Agile, precise bank-shot attacker | **Bankbreaker:** +2 impact damage after hitting a wall/pillar first, cooldown 2 rounds |
+**You vs The Hustler (computer)** on a standard-style six-pocket table with all 15 numbered balls and a white cue ball.
 
-Each character shoots normally when a special ability isn't selected. AI difficulty can be changed at any time.
+1. **Aim and shoot:** Click/touch the cue ball, **pull backward** to aim and set power, then release. Move the mouse over the table to preview an aim line.
+2. **Break:** Strike the racked balls. A legal break pockets at least one ball or sends at least four object balls to rails. The table stays open after the break.
+3. **Claim a group:** After the break, the first legally pocketed solid (1–7) or stripe (9–15) determines your group. Your opponent gets the other group.
+4. **Continue your inning:** Hit a ball from your own group first. After contact, any ball must touch a rail or be pocketed. Pocket one of your group on a legal shot to shoot again.
+5. **Fouls:** Scratches, hitting a wrong group first, missing all object balls, illegal breaks, and no rail/pocket after contact give the opponent **ball in hand anywhere**. When it is your turn with ball in hand, click the desired position on the table to place the cue ball.
+6. **Win on the eight:** Once your seven balls are cleared, click **Call 8 pocket**, then click one of the six glowing pockets. Pocket the 8 in that called pocket without fouling to win. Pocketing it too early or in another pocket loses.
+7. **House rule:** An 8-ball made on the break causes a re-rack, not an immediate win or loss.
 
-### Basic tactics
+The AI has Casual, Standard, and Expert settings. Match totals and best consecutive pocketed-ball run are saved locally in that browser. AI is an approximate geometric shot planner, not an unbeatable physics solver.
 
-- Use the **Vanguard** to knock enemies out of favorable positions and punish collisions.
-- Use **Striker's Overdrive** when you have a clear approach.
-- Use **Trickster** to go around pillars and trigger a banked hit.
-- Send heroes toward the **center rune** to gain a one-point guard against their next hit.
-- You can take as long as you like to aim; the game has no reaction-time challenge.
+### Files
 
-## Persistent profile
+- \`classic.html\` — 8-ball page
+- \`pool.css\` — pool UI and responsive layout
+- \`pool.js\` — rack, cue, ball physics, pockets, house rules, AI, score and local storage
+- \`zone-classic.html\` — original zone-control experiment
+- \`index.html\`, \`styles.css\`, \`game.js\` — separate arena battler
 
-Wins, matches, XP, and longest win streak are stored in **localStorage** on the device/browser you're using. This is a local test profile, **not** an online account. It won't sync between devices.
+### Deliberate limitations
 
-### What is not built
+There is no online multiplayer or global leaderboard, no cue spin / English, no commercial anti-cheat, and no cloud profile sync. Different pool leagues use different rule sets. This implementation documents its **house rules** rather than claiming to replicate every WPA or tournament rule.
 
-This prototype does **not** have online multiplayer, matchmaking, global leaderboards, permanent hero upgrades, equipment, lootboxes/gacha, purchases, cloud progression, or an MMO backend. Those systems should only be added after testing whether the battles are enjoyable.
+---
 
-## Project files
+## Arena Battler
 
-- \`index.html\` — redesigned battler interface
-- \`styles.css\` — responsive arena, roster, and controls
-- \`game.js\` — physics, character abilities, AI decisions, turn resolution, profile save
-- \`classic.html\` — preserved original pool-style prototype
+The original v0.2 experiment remains at the home page: select one of three hero discs, use an optional ability, drag backward to aim, and launch a shot simultaneously with the computer. Collisions deal damage; center rune provides limited shielding. Knock out all opponents or finish 12 rounds with more team HP.
 
-## Test targets
+Profile and cosmetics are experimental and stored locally. This game is being retained for potential future development.
 
-Try **Casual**, **Standard**, and **Expert** difficulty. Evaluate whether collision damage is understandable, the hero roles feel distinct, simultaneous shot planning is fun, and matches last a satisfying number of rounds. The numbers are tuning candidates, not final balance.
+---
 
-This is an experimental game; no live human multiplayer or server-side result verification is implemented.
+## Roadmap
+
+The next proposed game, **Crown & Crew**, should be developed in a separate repository. It is a distinct character-and-companion strategy RPG inspired by satisfying auto-battler formation and long-term RPG progression, rather than another mode inside this physics project.
