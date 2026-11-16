@@ -194,19 +194,22 @@ function resolveContact(a,b,normalX,normalY,closing){
  const towardA=Math.max(0,a.vx*normalX+a.vy*normalY);
  const towardB=Math.max(0,-b.vx*normalX-b.vy*normalY);
  const base=clamp(Math.round(closing/5),1,4);
- const hit=(from,to,extra=0)=>{
-  if(!from.alive||!to.alive)return;
-  let bonus=extra;
+ const attackDamage=from=>{
+  let bonus=0;
   if(from.launched&&from.special){
    if(from.type==="bruiser")bonus+=2;
    if(from.type==="striker")bonus+=1;
    if(from.type==="trickster"&&from.banked>0)bonus+=2;
   }
-  damage(to,base+bonus,from);
+  return base+bonus;
  };
- if(towardA>2.5&&towardB>2.5){hit(a,b);hit(b,a)}
- else if(towardA>=towardB)hit(a,b);
- else hit(b,a);
+ // Precompute simultaneous impact damage before either crew member can be KO'd.
+ if(towardA>2.5&&towardB>2.5){
+  const damageToB=attackDamage(a),damageToA=attackDamage(b);
+  damage(a,damageToA,b);
+  damage(b,damageToB,a);
+ }else if(towardA>=towardB)damage(b,attackDamage(a),a);
+ else damage(a,attackDamage(b),b);
 }
 function collision(a,b){
  if(!a.alive||!b.alive)return;
