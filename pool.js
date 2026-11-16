@@ -80,7 +80,10 @@ function aiPlan(){
   if(pd<18)continue;
   const tx=(p.x-target.x)/pd,ty=(p.y-target.y)/pd;
   const ghost={x:target.x-tx*(2*R+1),y:target.y-ty*(2*R+1)};
-  if(!validPlace(ghost.x,ghost.y))continue;
+  // The ghost-ball aiming position must touch the target, so exclude it from overlap testing.
+  const ghostClear=ghost.x>L+R+2&&ghost.x<RIGHT-R-2&&ghost.y>T+R+2&&ghost.y<BOTTOM-R-2
+    &&active().every(b=>b.n===0||b.n===target.n||dist(ghost,b)>R*2+1);
+  if(!ghostClear)continue;
   const cd=dist(cue,ghost);if(cd<25)continue;
   const a=clearSegment(cue,ghost,new Set([0,target.n]),-2);
   const b=clearSegment(target,p,new Set([target.n,0]),-1);
@@ -199,7 +202,7 @@ function resolveShot(){
   showEnd(valid?who:opponent,valid?"The called 8-ball dropped cleanly.":!s.eligibleEight?"The 8-ball was pocketed early.":foul?"The 8-ball was pocketed on a foul.":s.call<0?"The 8-ball pocket was not called.":"The 8-ball went into the wrong pocket.");
   return;
  }
- if(foul){swapTurn(foul+" — opponent has ball in hand.",true);return}
+ if(foul){if(s.breaker)breakShot=false;swapTurn(foul+" — opponent has ball in hand.",true);return}
  if(!s.breaker&&groups[0]===null){
   const firstClaim=objects.find(p=>p.n!==8&&(group(p.n)==="solid"||group(p.n)==="stripe"));
   if(firstClaim){groups[who]=group(firstClaim.n);groups[opponent]=groups[who]==="solid"?"stripe":"solid";log((who===0?"You":"Hustler")+" claimed "+groups[who]+"s!","win")}
